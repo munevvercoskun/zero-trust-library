@@ -1,4 +1,4 @@
-# Checks that run on your machine before every commit.
+# Checks that run on the machine before every commit.
 # Setup (once):  pip install pre-commit  &&  pre-commit install
 # Run by hand:   pre-commit run --all-files
 repos:
