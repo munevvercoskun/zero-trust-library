@@ -1,0 +1,19 @@
+# Checks that run on your machine before every commit.
+# Setup (once):  pip install pre-commit  &&  pre-commit install
+# Run by hand:   pre-commit run --all-files
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks # blocks a commit that contains a password, key or token
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: detect-private-key # second check for private keys
+      - id: check-added-large-files # stops dumps and binaries sneaking in
+        args: ["--maxkb=500"]
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
