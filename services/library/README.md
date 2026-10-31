@@ -9,5 +9,3 @@ Handles the catalogue and borrowing.
 - **Internet access:** none
 
 Borrowing runs in a single database transaction, so two people can't borrow the last copy at the same time.
-
-Built in Phase 3.

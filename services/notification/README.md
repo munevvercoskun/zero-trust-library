@@ -8,5 +8,3 @@ Sends email for the other services.
 - **Internet access:** yes, the only service allowed out, and only to the email provider
 
 Locally, emails go to Mailpit, so nothing leaves your machine.
-
-Built in Phase 3.

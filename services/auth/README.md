@@ -7,5 +7,3 @@ Handles who you are and what you're allowed to do.
 - **Called by:** the gateway
 - **Calls:** notification-service (password reset emails)
 - **Internet access:** none
-
-Built in Phase 2.
