@@ -1,6 +1,6 @@
 # Threat model
 
-Filled in during Phase 1. One row per data flow in the architecture.
+One row per data flow in the architecture.
 
 STRIDE: **S**poofing, **T**ampering, **R**epudiation, **I**nformation disclosure, **D**enial of service, **E**levation of privilege.
 
