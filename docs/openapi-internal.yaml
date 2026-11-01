@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: zero-trust-library internal API
+  version: 0.1.0
+  license: { name: MIT, url: "https://opensource.org/licenses/MIT" }
+  description: |
+    Service-to-service routes. Never exposed through the gateway.
+    Each service serves these on a separate internal port, and network policies decide who can reach it.
+    `x-callers` lists the only services allowed to call a route.
+
+servers:
+  - url: http://auth-service:8081
+    description: auth-service internal port
+  - url: http://notification-service:8081
+    description: notification-service internal port
+
+# No token auth on internal routes: callers are identified by mTLS at the network layer.
+security: []
+
+tags:
+  - name: auth-internal
+    description: Served by auth-service
+  - name: notification-internal
+    description: Served by notification-service
+
+paths:
+  /internal/users/{userId}:
+    get:
+      tags: [auth-internal]
+      summary: Look up a member for desk checkout or a reminder email
+      operationId: lookupUser
+      description: Served by auth-service. Returns only what callers need.
+      x-callers: [library-service]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: User summary
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [id, role, isActive, email]
+                properties:
+                  id: { type: string, format: uuid }
+                  role: { type: string, enum: [member, librarian, admin] }
+                  isActive: { type: boolean }
+                  email: { type: string, format: email }
+        "404":
+          description: No such user
+
+  /internal/emails:
+    post:
+      tags: [notification-internal]
+      summary: Send an email from a fixed template
+      operationId: sendEmail
+      description: Served by notification-service. Values are escaped into plain-text templates; no free-form content.
+      x-callers: [auth-service, library-service]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [template, to, values]
+              properties:
+                template:
+                  type: string
+                  enum: [password_reset, account_exists, due_reminder, hold_ready]
+                to: { type: string, format: email, maxLength: 254 }
+                values:
+                  type: object
+                  maxProperties: 5
+                  additionalProperties: { type: string, maxLength: 300 }
+      responses:
+        "202":
+          description: Queued for sending
+        "400":
+          description: Unknown template or bad values
+        "429":
+          description: Hourly limit for this recipient reached
