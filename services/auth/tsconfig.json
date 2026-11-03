@@ -1,0 +1,18 @@
+//This configuration file is used to specify the TypeScript compiler options for the auth service.
+// It defines the target ECMAScript version, module system, and other settings to ensure type safety and compatibility with Node.js.
+// The "include" property specifies the source directory to be compiled.
+
+{
+    "compilerOptions": {
+        "target": "es2023",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "rootDir": "src",
+        "outDir": "dist",
+        "strict": true,
+        "esModuleInterop": true,
+        "noUncheckedIndexedAccess": true,
+        "skipLibCheck": true
+    },
+    "include": ["src"]
+}
