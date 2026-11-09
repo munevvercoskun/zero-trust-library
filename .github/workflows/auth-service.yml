@@ -1,0 +1,42 @@
+# This workflow will build and test the auth-service on every push or pull request to the main branch.
+#https://github.com/actions/setup-node.git lists every release with its commit hash
+
+
+
+name: auth-service
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege: the job can read code and pull requests, nothing else.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history, so old commits are scanned too
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: services/auth/package-lock.json
+      - run: npm ci #not npm install, because this installs exactly what is in package-lock.json, which is what we want for CI.
+        working-directory: services/auth
+      - run: npm test
+        working-directory: services/auth
+      - run: npm audit --audit-level=moderate
+        working-directory: services/auth
+
+    defaults:
+      run:
+        working-directory: services/auth
