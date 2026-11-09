@@ -1,9 +1,11 @@
 # compose.yaml
+#It provides an ideal balance for production environments because it survives system reboots and daemon crashes, but respects intentional administrative actions.
 # Local development only. Values come from .env.
 services:
   # Backend Database Service
   auth-db:
     image: postgres:17-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${AUTH_DB_SUPERUSER_PASSWORD}

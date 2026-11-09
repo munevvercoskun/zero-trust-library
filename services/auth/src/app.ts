@@ -5,9 +5,12 @@
 
 import express, { type Request, type Response } from "express";
 import helmet from "helmet";
+import {Pool} from 'pg';
 
 
-export function createApp(): express.Application {
+
+
+export function createApp(pool?: Pool): express.Application {
 
     const app = express();
 
@@ -16,6 +19,19 @@ export function createApp(): express.Application {
 
     app.get("/health", (_req: Request, res: Response) => {
         res.status(200).json({ status: "ok" });
+    });
+
+    app.get("/ready", async (_req: Request, res: Response) => {
+        if (!pool) {
+            res.status(503).json({ status: "unavailable" });
+            return;
+        }
+        try {
+                await pool.query("SELECT 1");
+                res.json({ status: "ready" });
+            } catch {
+                res.status(503).json({ status: "unavailable" });
+            }
     });
 
     return app;

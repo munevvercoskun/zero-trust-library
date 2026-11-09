@@ -7,7 +7,11 @@
     "test": "test"
   },
   "scripts": {
+    "dev": "tsx watch --env-file=../../.env src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "migrate": "node --env-file=../../.env node_modules/node-pg-migrate/bin/node-pg-migrate.js --migrations-dir migrations --migration-file-language sql --migrations-schema migrations --database-url-var AUTH_MIGRATION_DB_URL"
   },
   "overrides": {
