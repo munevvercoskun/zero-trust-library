@@ -1,8 +1,13 @@
 # Opens a pull request when a pinned GitHub Action has a new release.
 # npm entries are added here as each service gets a package.json.
+
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /services/auth
     schedule:
       interval: weekly
